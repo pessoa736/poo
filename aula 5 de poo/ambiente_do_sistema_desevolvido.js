@@ -3,9 +3,44 @@ var debug_ = true
 // semi-"bancos de dados" 
 var Turmas=[]
 
-
-
 // classes
+class aluno{
+    #cpf;
+    #email;
+    #matriculas;
+    constructor(nome, cpf, idade, email, matricula=0){
+        this.nome = nome
+        this.#cpf = cpf
+        this.idade = idade
+        this.#email = email
+        this.#matriculas = matricula
+        this.tarefas_pendetes = []
+    }
+
+    getTarefasPendetes(assunto){
+        for (const tarefas of this.tarefas_pendetes) {
+            if (tarefas.assunto == assunto){
+                
+            }
+        }
+    }
+}
+
+
+class Exercicio{
+    #nome_do_aluno="";
+    constructor(assunto, diciplina, turma, professor){
+        this.assuto = assunto
+        this.diciplina = diciplina
+        this.turma = turma
+        this.professor = professor
+    }
+
+    assinar_nome(nome){
+        this.#nome_do_aluno = nome
+    }
+}
+
 class turma{
     constructor(serie = 0, email, horario = 0, sala = 0, alunos = {}){
         this.serie = serie;
@@ -17,6 +52,9 @@ class turma{
         if (debug_){
             console.log("turma criada")
         }
+    }
+    passarExercicios(){
+
     }
 }
 
@@ -50,5 +88,9 @@ class funtionario{
 class professores extends funtionario{
     constructor(nome, formacao, cpf, idade, email, turma){
         super(nome, formacao, cpf, idade, email, "professor", 1900)
+        this.turma = turma
+    }
+    passarAula(turma){
+        turma.alu
     }
 }
