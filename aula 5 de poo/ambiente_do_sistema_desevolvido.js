@@ -1,5 +1,12 @@
 var debug_ = true
 
+function debugPrint(text){
+    let color = "\x1b[32;40m"
+    let reset = "\x1b[0m"
+    console.log( `${color}` + text + `${reset}`)
+}
+
+
 
 //for me: table = array
 // semi-"bancos de dados" (tabelas) 
@@ -26,7 +33,12 @@ export function searchIndexProfessor(cpf){
         }
     }
 }
-export function addTurmas(serie, email, horario, sala, alunos){
+
+export function getProfessor(index){
+    return Banco_de_professores[index]
+}
+
+export function addTurma(serie, email, horario, sala, alunos){
     Banco_de_turmas.push(
         new turma(serie, email, horario, sala, alunos)
     )
@@ -42,6 +54,9 @@ export function searchIndexTurma(sala, horario){
             return index
         }
     }
+}
+export function getTurma(index){
+    return Banco_de_turmas[index]
 }
 
 
@@ -59,20 +74,13 @@ export class aluno{
         this.tarefas_pendetes = []
     }
 
-    getTarefasPendetes(assunto){
-        for (const tarefas of this.tarefas_pendetes) {
-            if (tarefas.assunto == assunto){
-                
-            }
-        }
-    }
     setTarefasPendetes(tarefas){
         this.tarefas_pendetes.push(tarefas)
     }
 }
 
 
-export class Exercicio{
+class Exercicio{
     #nome_do_aluno="";
     constructor(assunto, diciplina, turma, professor){
         this.assuto = assunto
@@ -86,16 +94,16 @@ export class Exercicio{
     }
 }
 
-export class turma{
-    constructor(serie = 0, email, horario = 0, sala = 0){
-        this.serie = serie;
+class turma{
+    constructor(turma, email, horario = 0, sala = 0){
+        this.turma = turma;
         this.email = email;
         this.horario = horario;
         this.sala = sala;
         this.alunos = [];
 
         if (debug_){
-            console.log("turma criada")
+            debugPrint("turma "+turma+" criada para "+sala)
         }
     }
     set_exercicios(Exercicios){
@@ -106,7 +114,7 @@ export class turma{
 }
 
 
-export class funtionario{
+class funtionario{
     #cpf=0;
     #email="";
     #salario="";
@@ -120,7 +128,7 @@ export class funtionario{
         this.cargo = cargo;
         this.#salario = salario;
         if (debug_){ 
-            console.log("funcionario "+nome+" no cargo de "+ cargo)
+            debugPrint("funcionario "+nome+" no cargo de "+ cargo)
         }
     }
     cadastro_de_aluno(aluno, turma){
@@ -128,7 +136,7 @@ export class funtionario{
     }
     
     baterPonto(horario){
-        console.log("bateu o ponto")
+        debugPrint("bateu o ponto")
     }
     get get_cpf(){
         return this.#cpf
@@ -138,14 +146,26 @@ export class funtionario{
     }
 }
 
-export class professores extends funtionario{
-    constructor(nome, formacao, cpf, idade, email, sala, horario){
+class professores extends funtionario{
+    constructor(nome, formacao, cpf, idade, email, turma = new Turma()){
+
         super(nome, formacao, cpf, idade, email, "professor", 1900)
-        this.sala = sala
-        this.horario = horario
+    
+        this.sala = turma.sala
+        this.horario = turma.horario
+        this.turmaName = turma.turma
+    
+        if (debug_){
+            debugPrint(this.nome + "agora da aula a turma " + this.turmaName + " na sala "+this.sala +" no horario "+ this.horario)
+        }
     }
     passarExercicios(tarefas){
         let indexTurma = searchIndexTurma(this.sala, this.horario)
         Banco_de_turmas[indexTurma].set_exercicios(tarefas)
     }
 }
+
+class curso{
+    constructor(){}
+}
+
