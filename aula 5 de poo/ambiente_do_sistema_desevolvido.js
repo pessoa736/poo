@@ -1,10 +1,52 @@
 var debug_ = true
 
-// semi-"bancos de dados" 
-var Turmas=[]
+
+//for me: table = array
+// semi-"bancos de dados" (tabelas) 
+
+var Banco_de_turmas = [];
+var Banco_de_professores = [];
+
+
+//funções de object adictions in "tables"
+export function addProfessor(nome, formacao, cpf, idade, email, turma){
+    Banco_de_professores.push(
+        new professores(nome, formacao, cpf, idade, email, turma)
+    )
+
+}
+
+export function searchIndexProfessor(cpf){
+    for (const index in Banco_de_professores) {
+        
+        let prof = Banco_de_professores[index]
+
+        if (cpf == prof.get_cpf){
+            return index
+        }
+    }
+}
+export function addTurmas(serie, email, horario, sala, alunos){
+    Banco_de_turmas.push(
+        new turma(serie, email, horario, sala, alunos)
+    )
+
+}
+
+export function searchIndexTurma(sala, horario){
+    for (const index in Banco_de_turmas) {
+        
+        let turm = Banco_de_turmas[index]
+
+        if (sala == turm.sala && horario == turm.horario){
+            return index
+        }
+    }
+}
+
 
 // classes
-class aluno{
+export class aluno{
     #cpf;
     #email;
     #matriculas;
@@ -24,10 +66,13 @@ class aluno{
             }
         }
     }
+    setTarefasPendetes(tarefas){
+        this.tarefas_pendetes.push(tarefas)
+    }
 }
 
 
-class Exercicio{
+export class Exercicio{
     #nome_do_aluno="";
     constructor(assunto, diciplina, turma, professor){
         this.assuto = assunto
@@ -41,25 +86,27 @@ class Exercicio{
     }
 }
 
-class turma{
-    constructor(serie = 0, email, horario = 0, sala = 0, alunos = {}){
+export class turma{
+    constructor(serie = 0, email, horario = 0, sala = 0){
         this.serie = serie;
         this.email = email;
         this.horario = horario;
         this.sala = sala;
-        this.alunos = alunos;
+        this.alunos = [];
 
         if (debug_){
             console.log("turma criada")
         }
     }
-    passarExercicios(){
-
+    set_exercicios(Exercicios){
+        for (const alunos of this.alunos) {
+            alunos.setTarefasPendetes(Exercicios)
+        }
     }
 }
 
 
-class funtionario{
+export class funtionario{
     #cpf=0;
     #email="";
     #salario="";
@@ -83,14 +130,22 @@ class funtionario{
     baterPonto(horario){
         console.log("bateu o ponto")
     }
+    get get_cpf(){
+        return this.#cpf
+    }
+    get get_email(){
+        return this.#email
+    }
 }
 
-class professores extends funtionario{
-    constructor(nome, formacao, cpf, idade, email, turma){
+export class professores extends funtionario{
+    constructor(nome, formacao, cpf, idade, email, sala, horario){
         super(nome, formacao, cpf, idade, email, "professor", 1900)
-        this.turma = turma
+        this.sala = sala
+        this.horario = horario
     }
-    passarAula(turma){
-        turma.alu
+    passarExercicios(tarefas){
+        let indexTurma = searchIndexTurma(this.sala, this.horario)
+        Banco_de_turmas[indexTurma].set_exercicios(tarefas)
     }
 }
