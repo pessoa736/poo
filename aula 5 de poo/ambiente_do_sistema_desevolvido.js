@@ -1,48 +1,71 @@
-var debug_ = true
 
-function debugPrint(text){
-    let color = "\x1b[32;40m"
+// Lembrando, aqui nao usei nenhum banco de dados. 
+// Quando me refiro a banco e so uma table(array) onde guardo temporariamente dados
+// durante a execucao do programa.
+
+
+var debug_ = false
+
+export function enableDebug(){
+    debug_ = true
+    debugPrint("debug_mode_on\n\n", "\x1b[31m")
+}
+
+
+function debugPrint(text, color = "\x1b[32m"){
     let reset = "\x1b[0m"
-    console.log( `${color}` + text + `${reset}`)
+    if (debug_){
+        console.log( `${color}` + text + `${reset}`)
+    }
 }
 
 
 
 //for me: table = array
-// semi-"bancos de dados" (tabelas) 
+// tabelas 
 
 var Banco_de_turmas = [];
-var Banco_de_professores = [];
+var Banco_de_funcionarios = [];
+var Banco_de_alunos = [];
 
 
 //funções de object adictions in "tables"
 export function addProfessor(nome, formacao, cpf, idade, email, turma){
-    Banco_de_professores.push(
+    Banco_de_funcionarios.push(
         new professores(nome, formacao, cpf, idade, email, turma)
     )
-
+    debugPrint("o professor "+ nome + " foi addicionado ao banco de functionarios")
+}
+export function addFuncionario(nome, formacao, cpf, idade, email, cargo, salario){
+    Banco_de_funcionarios.push(
+        new funcionario(nome, formacao, cpf, idade, email, cargo, salario)
+    )
+    debugPrint("o "+cargo +" "+ nome + " foi addicionado ao banco de functionarios")
 }
 
-export function searchIndexProfessor(cpf){
-    for (const index in Banco_de_professores) {
+export function searchIndexfuncionario(cpf){
+    for (const index in Banco_de_funcionarios) {
         
-        let prof = Banco_de_professores[index]
+        let prof = Banco_de_funcionarios[index]
 
         if (cpf == prof.get_cpf){
+            debugPrint("o funcionario com cpf " + cpf + " esta on index " + index + " no banco de funcionarios")
             return index
         }
     }
 }
 
-export function getProfessor(index){
-    return Banco_de_professores[index]
+export function getfuncionario(index){
+    let fun = Banco_de_funcionarios[index]
+    debugPrint("o funcionario pego do index " + index + " foi: " + fun.nome)
+    return fun
 }
 
 export function addTurma(serie, email, horario, sala, alunos){
     Banco_de_turmas.push(
         new turma(serie, email, horario, sala, alunos)
     )
-
+    debugPrint("a turma " + serie + " foi addicionada ao banco de Turmas")
 }
 
 export function searchIndexTurma(sala, horario){
@@ -51,31 +74,65 @@ export function searchIndexTurma(sala, horario){
         let turm = Banco_de_turmas[index]
 
         if (sala == turm.sala && horario == turm.horario){
+            debugPrint("a Turma da sala " + sala + " e do horario " + horario + " esta on index " + index + "no banco de funcionarios")
             return index
         }
     }
 }
 export function getTurma(index){
-    return Banco_de_turmas[index]
+    let turm=Banco_de_turmas[index]
+    debugPrint("a turma pega do index " + index + " foi: " + turm.turma)
+    return turm
 }
 
+export function addAlunos(nome, cpf, idade, email, matricula){
+    Banco_de_alunos.push(
+        new aluno(nome, cpf, idade, email, matricula)
+    )
+    debugPrint("o aluno "+ nome + " foi addicionado ao banco de Alunos")
+}
+
+export function searchIndexAluno(cpf){
+    for (const index in Banco_de_alunos) {
+        
+        var alun = Banco_de_alunos[parseInt(index)]
+
+        if (cpf == alun.cpf){
+            debugPrint("o aluno com cpf " + cpf + " esta on index " + index + " no banco de Alunos")
+            return parseInt(index)
+        }
+    }
+    return 0
+}
+export function getAlunos(index){
+    var alu = Banco_de_alunos[index]
+    debugPrint("a turma pega do index " + index + " foi: " + alu.nome)
+    if (index!=null){
+        return alu
+    }
+}
 
 // classes
 export class aluno{
     #cpf;
     #email;
     #matriculas;
-    constructor(nome, cpf, idade, email, matricula=0){
+    constructor(nome, cpf, idade, email, curso){
         this.nome = nome
         this.#cpf = cpf
         this.idade = idade
         this.#email = email
-        this.#matriculas = matricula
+        this.#matriculas = curso.matriculas.length
         this.tarefas_pendetes = []
     }
 
     setTarefasPendetes(tarefas){
         this.tarefas_pendetes.push(tarefas)
+    }
+
+    get cpf(){
+        debugPrint("o cpf do "+this.nome+" foi consutado" )
+        return this.#cpf
     }
 }
 
@@ -91,6 +148,10 @@ class Exercicio{
 
     assinar_nome(nome){
         this.#nome_do_aluno = nome
+        debugPrint(
+            "o execicio da dicplina "+ this.diciplina + " do assulto "+ this.assuto+
+            "foi assinada no nome de "+this.#nome_do_aluno 
+        )
     }
 }
 
@@ -102,19 +163,18 @@ class turma{
         this.sala = sala;
         this.alunos = [];
 
-        if (debug_){
-            debugPrint("turma "+turma+" criada para "+sala)
-        }
+        debugPrint("turma "+turma+" criada para "+sala)
     }
     set_exercicios(Exercicios){
         for (const alunos of this.alunos) {
             alunos.setTarefasPendetes(Exercicios)
         }
+        debugPrint("Exercicios para a turma" + this.turma + " foram adicionadas")
     }
 }
 
 
-class funtionario{
+class funcionario{
     #cpf=0;
     #email="";
     #salario="";
@@ -127,12 +187,17 @@ class funtionario{
         this.#email = email;
         this.cargo = cargo;
         this.#salario = salario;
-        if (debug_){ 
-            debugPrint("funcionario "+nome+" no cargo de "+ cargo)
-        }
+       
+        debugPrint(
+            "funcionario "+nome+
+            " no cargo de "+ cargo+
+            " com um salario de " + salario
+        )
+        
     }
-    cadastro_de_aluno(aluno, turma){
-        turma.alunos.push(aluno)
+    cadastro_de_aluno(aluno, curso, turma){
+        curso.add_aluno(aluno, turma)
+        debugPrint(this.)
     }
     
     baterPonto(horario){
@@ -146,7 +211,7 @@ class funtionario{
     }
 }
 
-class professores extends funtionario{
+class professores extends funcionario{
     constructor(nome, formacao, cpf, idade, email, turma = new Turma()){
 
         super(nome, formacao, cpf, idade, email, "professor", 1900)
@@ -156,7 +221,11 @@ class professores extends funtionario{
         this.turmaName = turma.turma
     
         if (debug_){
-            debugPrint(this.nome + "agora da aula a turma " + this.turmaName + " na sala "+this.sala +" no horario "+ this.horario)
+            debugPrint(
+                this.nome + "agora da aula a turma " + 
+                this.turmaName + " na sala "+this.sala +
+                " no horario "+ this.horario 
+            )
         }
     }
     passarExercicios(tarefas){
@@ -165,7 +234,23 @@ class professores extends funtionario{
     }
 }
 
-class curso{
-    constructor(){}
+export class curso{
+    turmas = [];
+    matriculas = [];
+    constructor(nome){
+        this.nome = nome;
+        this.mediaNecessaria = 7;
+        
+    }
+    add_turma(turma){
+        this.turmas.push(turma)
+    }
+    add_aluno(aluno, turma){
+        for (const t of this.turmas) {
+            if (turma.turma == t.turma) {
+                t.alunos.push(aluno)
+            }
+        }
+    }
 }
 
