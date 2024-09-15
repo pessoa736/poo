@@ -1,10 +1,11 @@
 import { addTurma, getTurma, searchIndexTurma } from "../ambiente_do_sistema_desevolvido.js"
 import { INIT_Cursos } from "./cursos.js"
 
-export function init_Turmas(){
-    var sala = "sala03"
+var sala = "sala03"
 
-    var TI=INIT_Cursos()
+var TI=INIT_Cursos()
+
+export function init_Turmas(){
 
     addTurma("info-01", "turma1@gmail.com", "08:00-11:00", sala)
     addTurma("info-02", "turma2@gmail.com", "14:00-17:00", sala)

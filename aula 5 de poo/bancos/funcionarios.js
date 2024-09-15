@@ -1,8 +1,9 @@
 import { addFuncionario, addProfessor, getfuncionario } from "../ambiente_do_sistema_desevolvido.js";
 import { init_Turmas } from "./Turmas.js";
 
+
+var turmas = init_Turmas()
 export function init_funcionarios(){
-    var turmas = init_Turmas()
 
     addFuncionario("davi dos santos",   "tudo que existe",              "000.000.000-01", "20M",    "robloxamongus@minecraft.sus",      "secretario", 2500.00)
     addFuncionario("noob roblox",       "pedagogia",                    "000.000.000-01", "69",     "noobMasterroblox88@baller.lua",    "diretor", 2500.00)
