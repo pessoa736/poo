@@ -126,6 +126,13 @@ export class aluno{
         this.tarefas_pendetes = []
     }
 
+    fazerTodasAtividades(){
+        for (const ta of this.tarefas_pendetes) {
+            ta.assinar_nome(this.nome)
+            ta.concluir(this.nome)
+        }
+    }
+
     setTarefasPendetes(tarefas){
         this.tarefas_pendetes.push(tarefas)
     }
@@ -137,13 +144,15 @@ export class aluno{
 }
 
 
-class Exercicio{
+export class Exercicio{
     #nome_do_aluno="";
     constructor(assunto, diciplina, turma, professor){
         this.assuto = assunto
         this.diciplina = diciplina
         this.turma = turma
         this.professor = professor
+
+        debugPrint("atividade '"+assunto+"' da diciplina de '"+ diciplina + "' para a turna" + turma.turma)
     }
 
     assinar_nome(nome){
@@ -151,6 +160,12 @@ class Exercicio{
         debugPrint(
             "o execicio da dicplina "+ this.diciplina + " do assulto "+ this.assuto+
             "foi assinada no nome de "+this.#nome_do_aluno 
+        )
+    }
+    concluir(nome){
+        debugPrint(
+            "o execicio de "+nome+" da dicplina "+ this.diciplina + " do assulto "+ this.assuto+
+            "foi concluida"
         )
     }
 }
@@ -197,16 +212,18 @@ class funcionario{
     }
     cadastro_de_aluno(aluno, curso, turma){
         curso.add_aluno(aluno, turma)
-        debugPrint(this.)
+        debugPrint(this.nome + " adicionou o aluno " + aluno.nome + " na turma " + turma.turma + " do curso de "+ curso.nome)
     }
     
     baterPonto(horario){
-        debugPrint("bateu o ponto")
+        debugPrint("o "+ this.nome +"bateu o ponto")
     }
     get get_cpf(){
+        debugPrint("o "+ this.nome + "teve o cpf consultado")
         return this.#cpf
     }
     get get_email(){
+        debugPrint("o "+ this.nome + "teve o email consultado")
         return this.#email
     }
 }
@@ -220,15 +237,14 @@ class professores extends funcionario{
         this.horario = turma.horario
         this.turmaName = turma.turma
     
-        if (debug_){
-            debugPrint(
-                this.nome + "agora da aula a turma " + 
-                this.turmaName + " na sala "+this.sala +
-                " no horario "+ this.horario 
-            )
-        }
+        debugPrint(
+            this.nome + "agora da aula a turma " + 
+            this.turmaName + " na sala "+this.sala +
+            " no horario "+ this.horario 
+        )
     }
     passarExercicios(tarefas){
+        debugPrint("o "+this.nome+" passou exercicios para a sala "+ this.sala)
         let indexTurma = searchIndexTurma(this.sala, this.horario)
         Banco_de_turmas[indexTurma].set_exercicios(tarefas)
     }
@@ -244,11 +260,13 @@ export class curso{
     }
     add_turma(turma){
         this.turmas.push(turma)
+        debugPrint("foi adicionado ao curso de "+ this.nome + " a turma " + turma.turma)
     }
     add_aluno(aluno, turma){
         for (const t of this.turmas) {
             if (turma.turma == t.turma) {
                 t.alunos.push(aluno)
+                debugPrint("adicionando o aluno" + aluno.nome + " na turma " + t.turma + "no curso de " + this.nome)
             }
         }
     }
