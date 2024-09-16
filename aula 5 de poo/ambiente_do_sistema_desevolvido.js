@@ -8,7 +8,11 @@ var debug_ = false
 
 export function enableDebug(){
     debug_ = true
-    debugPrint("debug_mode_on\n\n", "\x1b[31m")
+    debugPrint("\ndebug_mode_on\n", "\x1b[31m")
+}
+export function disableDebug(){
+    debugPrint("\ndebug_mode_off\n", "\x1b[31m")
+    debug_ = false
 }
 
 
@@ -27,9 +31,40 @@ function debugPrint(text, color = "\x1b[32m"){
 var Banco_de_turmas = [];
 var Banco_de_funcionarios = [];
 var Banco_de_alunos = [];
+var Bancos_de_tarefas=[];
 
+export function show_all_bancos(){
+    console.log("\n turmas:")
+    for (const b of Banco_de_turmas) {
+        console.log("° " + b.turma)
+        for (const id of b.alunos) {
+            console.log("\t" + Banco_de_alunos[id].nome)   
+        }
+
+    }
+    console.log("\n functionarios:")
+    for (const b of Banco_de_funcionarios) {
+        console.log("° "+b.nome)
+    }
+    console.log("\n alunos:")
+    for (const b of Banco_de_alunos) {
+        console.log("° " + b.nome)
+    }
+}
 
 //funções de object adictions in "tables"
+export function Get_numero_de_turmas(){
+    return Banco_de_turmas.length
+}
+
+export function Get_numero_de_funcionarios(){
+    return Banco_de_funcionarios.length
+}
+
+export function Get_numero_de_alunos(){
+    return Banco_de_alunos.length
+}
+
 export function addProfessor(nome, formacao, cpf, idade, email, turma){
     Banco_de_funcionarios.push(
         new professores(nome, formacao, cpf, idade, email, turma)
@@ -68,7 +103,7 @@ export function addTurma(serie, email, horario, sala, alunos){
     debugPrint("a turma " + serie + " foi addicionada ao banco de Turmas")
 }
 
-export function searchIndexTurma(sala, horario){
+export function searchTurma(sala, horario){
     for (const index in Banco_de_turmas) {
         
         let turm = Banco_de_turmas[index]
@@ -79,11 +114,6 @@ export function searchIndexTurma(sala, horario){
         }
     }
 }
-export function getTurma(index){
-    let turm=Banco_de_turmas[index]
-    debugPrint("a turma pega do index " + index + " foi: " + turm.turma)
-    return turm
-}
 
 export function addAlunos(nome, cpf, idade, email, matricula){
     Banco_de_alunos.push(
@@ -92,7 +122,7 @@ export function addAlunos(nome, cpf, idade, email, matricula){
     debugPrint("o aluno "+ nome + " foi addicionado ao banco de Alunos")
 }
 
-export function searchIndexAluno(cpf){
+export function searchAluno(cpf){
     for (const index in Banco_de_alunos) {
         
         var alun = Banco_de_alunos[parseInt(index)]
@@ -104,12 +134,12 @@ export function searchIndexAluno(cpf){
     }
     return 0
 }
-export function getAlunos(index){
-    var alu = Banco_de_alunos[index]
-    debugPrint("a turma pega do index " + index + " foi: " + alu.nome)
-    if (index!=null){
-        return alu
-    }
+
+
+export function getAluno(index){
+    let fun = Banco_de_alunos[index]
+    debugPrint("o aluno pego do index " + index + " foi: " + fun.nome)
+    return fun
 }
 
 // classes
@@ -146,13 +176,13 @@ export class aluno{
 
 export class Exercicio{
     #nome_do_aluno="";
-    constructor(assunto, diciplina, turma, professor){
+    constructor(assunto, diciplina, idturma, professor){
         this.assuto = assunto
         this.diciplina = diciplina
-        this.turma = turma
+        this.turma = idturma
         this.professor = professor
 
-        debugPrint("atividade '"+assunto+"' da diciplina de '"+ diciplina + "' para a turna" + turma.turma)
+        debugPrint("atividade '"+assunto+"' da diciplina de '"+ diciplina + "' para a turna" + Banco_de_turmas[idturma].turma)
     }
 
     assinar_nome(nome){
@@ -176,13 +206,14 @@ class turma{
         this.email = email;
         this.horario = horario;
         this.sala = sala;
+        this.numero_de_vagas = 5;
         this.alunos = [];
 
         debugPrint("turma "+turma+" criada para "+sala)
     }
     set_exercicios(Exercicios){
         for (const alunos of this.alunos) {
-            alunos.setTarefasPendetes(Exercicios)
+            Banco_de_alunos[alunos].setTarefasPendetes(Exercicios)
         }
         debugPrint("Exercicios para a turma" + this.turma + " foram adicionadas")
     }
@@ -192,7 +223,7 @@ class turma{
 class funcionario{
     #cpf=0;
     #email="";
-    #salario="";
+    #salario=0;
     
     constructor(nome, formacao, cpf, idade, email, cargo, salario){
         this.nome = nome;
@@ -210,9 +241,9 @@ class funcionario{
         )
         
     }
-    cadastro_de_aluno(aluno, curso, turma){
-        curso.add_aluno(aluno, turma)
-        debugPrint(this.nome + " adicionou o aluno " + aluno.nome + " na turma " + turma.turma + " do curso de "+ curso.nome)
+    cadastro_de_aluno(idaluno, curso, idturma){
+        curso.add_aluno(idaluno, idturma)
+        debugPrint(this.nome + " adicionou o aluno " + Banco_de_alunos[idaluno].nome + " na turma " + Banco_de_turmas[idturma].turma + " do curso de "+ curso.nome)
     }
     
     baterPonto(horario){
@@ -229,13 +260,13 @@ class funcionario{
 }
 
 class professores extends funcionario{
-    constructor(nome, formacao, cpf, idade, email, turma = new Turma()){
+    constructor(nome, formacao, cpf, idade, email, idturma){
 
         super(nome, formacao, cpf, idade, email, "professor", 1900)
     
-        this.sala = turma.sala
-        this.horario = turma.horario
-        this.turmaName = turma.turma
+        this.sala = Banco_de_turmas[idturma].sala
+        this.horario = Banco_de_turmas[idturma].horario
+        this.turmaName = Banco_de_turmas[idturma].turma
     
         debugPrint(
             this.nome + "agora da aula a turma " + 
@@ -244,31 +275,41 @@ class professores extends funcionario{
         )
     }
     passarExercicios(tarefas){
+
         debugPrint("o "+this.nome+" passou exercicios para a sala "+ this.sala)
-        let indexTurma = searchIndexTurma(this.sala, this.horario)
+
+        let indexTurma = searchTurma(this.sala, this.horario)
         Banco_de_turmas[indexTurma].set_exercicios(tarefas)
+
     }
 }
 
+
+
 export class curso{
+
     turmas = [];
     matriculas = [];
+
     constructor(nome){
+
         this.nome = nome;
         this.mediaNecessaria = 7;
         
     }
-    add_turma(turma){
-        this.turmas.push(turma)
-        debugPrint("foi adicionado ao curso de "+ this.nome + " a turma " + turma.turma)
+
+    add_turma(idturma){
+
+        this.turmas.push(idturma)
+        debugPrint("foi adicionado ao curso de "+ this.nome + " a turma " + Banco_de_turmas[idturma].turma)
+
     }
-    add_aluno(aluno, turma){
-        for (const t of this.turmas) {
-            if (turma.turma == t.turma) {
-                t.alunos.push(aluno)
-                debugPrint("adicionando o aluno" + aluno.nome + " na turma " + t.turma + "no curso de " + this.nome)
-            }
-        }
+
+    add_aluno(idaluno, idturma){
+
+        Banco_de_turmas[idturma].alunos.push(idaluno)
+        debugPrint("adicionando o aluno" + Banco_de_alunos[idaluno].nome + " na turma " + Banco_de_turmas[idturma].turma + "no curso de " + this.nome)
+
     }
 }
 
