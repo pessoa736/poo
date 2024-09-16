@@ -92,7 +92,12 @@ export function searchIndexfuncionario(cpf){
 
 export function getfuncionario(index){
     let fun = Banco_de_funcionarios[index]
-    debugPrint("o funcionario pego do index " + index + " foi: " + fun.nome)
+    debugPrint("o funcionario do index " + index + " que foi consultado, foi: " + fun.nome)
+    return fun
+}
+export function getTurma(index){
+    let fun = Banco_de_turmas[index]
+    debugPrint("a turma do index " + index + " que foi consultada, foi a: " + fun.turma)
     return fun
 }
 
@@ -138,7 +143,7 @@ export function searchAluno(cpf){
 
 export function getAluno(index){
     let fun = Banco_de_alunos[index]
-    debugPrint("o aluno pego do index " + index + " foi: " + fun.nome)
+    debugPrint("o aluno do index " + index + " que foi consultado, foi: " + fun.nome)
     return fun
 }
 

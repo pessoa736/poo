@@ -1,9 +1,11 @@
-import { addAlunos, addFuncionario, addProfessor, addTurma, curso, disableDebug, enableDebug, Get_numero_de_alunos, Get_numero_de_turmas, getAlunos, getTurma } from "../ambiente_do_sistema_desevolvido.js";
+import { addAlunos, addFuncionario, addProfessor, addTurma, curso, Get_numero_de_alunos, Get_numero_de_turmas, getTurma } from "../ambiente_do_sistema_desevolvido.js";
 
 var sala;
 var TI;
 
 export function init_banco(){
+    
+    console.log("--------------------gerando banco------------------------")
     //ABAIXO FEITO POR MIM
     sala = "sala03"
 
@@ -31,9 +33,9 @@ export function init_banco(){
     addFuncionario("julia martins",     "artes do absurdo",             "000.000.000-13", "1M",     "julia.paint@impossibleart.space",  "artista",      4700.00)
     
     //ABAIXO FEITO POR MIM
-    addProfessor("colodoado valentim", "todas as areas conhecidas pela a humanidade", "101.010.101-01", "desconhecida", "AprendaAqui@gmail.com.br.aaaaa", getTurma(0))
-    addProfessor("victor barros",     "astronomia oculta",                            "000.000.000-15", "500M",         "victor.stars@darksky.univ",      getTurma(1))
-    addProfessor("mariana ferreira",  "física do impossível",                         "000.000.000-16", "60",           "mariana.phys@quantumlogic.net",  getTurma(2))
+    addProfessor("colodoado valentim", "todas as areas conhecidas pela a humanidade", "101.010.101-01", "desconhecida", "AprendaAqui@gmail.com.br.aaaaa", 0)
+    addProfessor("victor barros",     "astronomia oculta",                            "000.000.000-15", "500M",         "victor.stars@darksky.univ",      1)
+    addProfessor("mariana ferreira",  "física do impossível",                         "000.000.000-16", "60",           "mariana.phys@quantumlogic.net",  2)
 
     addAlunos("michael json",   "119.400.289-22", "67", "annieAreYouOk@areYou.ok.annie",    TI)
 
@@ -50,12 +52,12 @@ export function init_banco(){
     addAlunos("rick sanchez",   "999.888.777-11", "70", "rickC137@portal.science",          TI)
     
     //ABAIXO FEITO POR MIM
-    console.log("banco gerado")
+    console.log("--------------------banco gerado------------------------")
 }
 
 
 export function cadastro_de_todos_alunos(funcionario){
-    console.log("------------cadastro de alunos------------")
+    console.log("------------iniciando cadastro de alunos------------")
     for (let i = 0; i < Get_numero_de_alunos(); i++ ){
         let j=0
 
@@ -65,11 +67,12 @@ export function cadastro_de_todos_alunos(funcionario){
             }
         }
         funcionario.cadastro_de_aluno( 
-            getAlunos(i), 
+            i, 
             TI, 
             j
         )
     }
+    console.log("------------cadastro de alunos finalizado------------")
 }
 
 
