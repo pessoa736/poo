@@ -1,7 +1,7 @@
 import { curso, disableDebug, enableDebug, getfuncionario, searchIndexfuncionario, show_all_bancos } from "./ambiente_do_sistema_desevolvido.js";
 import { cadastro_de_todos_alunos, init_banco } from "./bancos/geral.js";
 
-enableDebug()
+//enableDebug()
 
 init_banco()
 
