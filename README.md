@@ -1,4 +1,8 @@
-### Atividades de POO(Programação Orientada a Objetos) 
+# Exercícios de Programação Orientada a Objetos (POO)
+
+# introdução
 <p align=left display=inline>
- Aqui estam todas as questões que resolvi na dicplina de POO no curso que fiz.<br>Das mais simples até as mais complexas.
+ 
+Este repositório contém uma coleção de exercícios resolvidos da disciplina de <b>Programação Orientada a Objetos</b>, como parte do curso <b>Tecnico em Informatica</b>. Aqui você encontrará soluções de cada questão proposta pela discipla, todas focadas nos conceitos principais de POO.
+
 </p>
