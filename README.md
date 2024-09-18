@@ -19,6 +19,7 @@ Este repositório contém uma coleção de exercícios resolvidos da disciplina 
 - <b>`./aula 5 de poo`</b>: Exercícios da aula 5,
 
 ## Contribuições
-<a link="https://github.com/pesso0a736">Eu</a>
-
+ - Davi dos santos passos <a href="https://github.com/pesso0a736">@pessos736</a> (Eu)
+ - Antonio Augusto de Moura Neto <a href="https://github.com/AugustoNeto00">@AugustoNeto00</a><br>
+ 
 (fiz algumas atividade em conjunto com um amigo.)
